@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Love Chaos — Truth or Dare 💕</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        heading: ['"Space Grotesk"', 'sans-serif'],
+                        body: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        pink: '#FF5C8A',
+                        lavender: '#C7A4FF',
+                        peach: '#FFD6C9',
+                        cream: '#FFF8F3',
+                        dark: '#222222',
+                        success: '#6BCB77',
+                        warning: '#FFD93D',
+                        rose: '#FF5C8A',
+                    },
+                    borderRadius: {
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '28px',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js">
+    </script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js">
+    </script>
+
+    <!-- Babel Standalone -->
+    <script src="https://unpkg.com/@babel/standalone@7/babel.min.js">
+    </script>
+
+    <!-- canvas-confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1">
+    </script>
+
+    <style>
+        /* --- (all styles unchanged from previous version) --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #FFF8F3;
+            color: #222222;
+            transition: background 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
+        }
+        body.dark {
+            background: #111827;
+            color: #ffffff;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FF5C8A;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #e04a7a;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(18px) saturate(180%);
+            -webkit-backdrop-filter: blur(18px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.06);
+        }
+        .dark .glass {
+            background: rgba(31, 41, 55, 0.65);
+            backdrop-filter: blur(18px) saturate(180%);
+            -webkit-backdrop-filter: blur(18px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.60);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.30);
+            border-radius: 24px;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+        .dark .glass-card {
+            background: rgba(31, 41, 55, 0.70);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+        }
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.10);
+        }
+        .dark .glass-card:hover {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-18px) rotate(3deg);
+            }
+        }
+        @keyframes floatSlow {
+            0%,
+            100% {
+                transform: translateY(0px) scale(1);
+            }
+            50% {
+                transform: translateY(-30px) scale(1.02);
+            }
+        }
+        @keyframes heartBeat {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            14% {
+                transform: scale(1.15);
+            }
+            28% {
+                transform: scale(1);
+            }
+            42% {
+                transform: scale(1.10);
+            }
+            56% {
+                transform: scale(1);
+            }
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+        @keyframes pulseGlow {
+            0%,
+            100% {
+                box-shadow: 0 0 30px rgba(255, 92, 138, 0.15);
+            }
+            50% {
+                box-shadow: 0 0 60px rgba(255, 92, 138, 0.30);
+            }
+        }
+        @keyframes confettiDrop {
+            0% {
+                transform: translateY(-20px) rotate(0deg) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(80vh) rotate(720deg) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        .animate-float-slow {
+            animation: floatSlow 8s ease-in-out infinite;
+        }
+        .animate-heart-beat {
+            animation: heartBeat 1.8s ease-in-out infinite;
+        }
+        .animate-slide-up {
+            animation: slideUp 0.8s ease-out forwards;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        .animate-shimmer {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.05) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 2s ease-in-out infinite;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #FF5C8A 0%, #C7A4FF 70%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #FF5C8A, #C7A4FF);
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 36px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            background: linear-gradient(135deg, #FF5C8A, #C7A4FF);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 30px rgba(255, 92, 138, 0.30);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 48px rgba(255, 92, 138, 0.40);
+        }
+        .btn-primary:active {
+            transform: scale(0.97);
+        }
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 36px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            background: rgba(255, 255, 255, 0.70);
+            backdrop-filter: blur(8px);
+            color: #222;
+            border: 1px solid rgba(255, 255, 255, 0.30);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .dark .btn-secondary {
+            background: rgba(31, 41, 55, 0.70);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.10);
+        }
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+        .dark .btn-secondary:hover {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .hero-bg .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.30;
+            animation: floatSlow 12s ease-in-out infinite;
+        }
+        .hero-bg .blob:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: #FF5C8A;
+            top: -15%;
+            right: -10%;
+            animation-delay: 0s;
+        }
+        .hero-bg .blob:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: #C7A4FF;
+            bottom: -10%;
+            left: -10%;
+            animation-delay: -4s;
+        }
+        .hero-bg .blob:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            background: #FFD6C9;
+            top: 40%;
+            left: 30%;
+            animation-delay: -8s;
+            opacity: 0.15;
+        }
+        .dark .hero-bg .blob {
+            opacity: 0.20;
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 1.8rem;
+            opacity: 0.20;
+            animation: float 8s ease-in-out infinite;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 340px;
+            height: 340px;
+            margin: 0 auto;
+        }
+        @media (max-width: 640px) {
+            .wheel-container {
+                width: 280px;
+                height: 280px;
+            }
+        }
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            border: 8px solid #FF5C8A;
+            box-shadow: 0 0 60px rgba(255, 92, 138, 0.3), inset 0 0 60px rgba(255, 92, 138, 0.05);
+            transition: transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+        .wheel-segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            top: 0;
+            left: 50%;
+            transform-origin: 0% 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-align: center;
+            padding: 0 6px;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            cursor: default;
+            user-select: none;
+        }
+        .wheel-segment span {
+            transform: rotate(90deg);
+            display: block;
+            font-size: 0.7rem;
+            line-height: 1.2;
+        }
+        @media (max-width: 640px) {
+            .wheel-segment span {
+                font-size: 0.55rem;
+            }
+        }
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FF5C8A, #C7A4FF);
+            border-radius: 50%;
+            border: 4px solid #fff;
+            box-shadow: 0 0 40px rgba(255, 92, 138, 0.5);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .dark .wheel-center {
+            border-color: #111827;
+        }
+        .wheel-pointer {
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            font-size: 2.5rem;
+            filter: drop-shadow(0 4px 12px rgba(255, 92, 138, 0.5));
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.50);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.4s ease-out;
+        }
+        .modal-content {
+            max-width: 92%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem 2rem 2.5rem;
+            border-radius: 32px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(24px);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.20);
+            position: relative;
+            width: 480px;
+        }
+        .dark .modal-content {
+            background: rgba(31, 41, 55, 0.94);
+            backdrop-filter: blur(24px);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+        }
+
+        .stat-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #FF5C8A, #C7A4FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container-custom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        @media (max-width: 640px) {
+            .container-custom {
+                padding: 0 16px;
+            }
+            .btn-primary,
+            .btn-secondary {
+                padding: 14px 28px;
+                font-size: 0.95rem;
+            }
+        }
+
+        .scroll-indicator {
+            animation: float 2.8s ease-in-out infinite;
+        }
+
+        .badge-pulse {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        .confetti-piece {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            animation: confettiDrop linear forwards;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .surprise-popup {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 500;
+            animation: slideUp 0.6s ease-out;
+            max-width: 280px;
+        }
+        @media (max-width: 640px) {
+            .surprise-popup {
+                bottom: 16px;
+                right: 16px;
+                max-width: 200px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .game-result-card {
+            background: linear-gradient(135deg, rgba(255, 92, 138, 0.08), rgba(199, 164, 255, 0.08));
+            border: 2px solid rgba(255, 92, 138, 0.15);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .dark .game-result-card {
+            background: linear-gradient(135deg, rgba(255, 92, 138, 0.10), rgba(199, 164, 255, 0.10));
+            border-color: rgba(255, 92, 138, 0.12);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="root"></div>
+
+    <script type="text/babel" data-presets="react">
+        // ============================================================
+        //  LOVE CHAOS — Updated Truth & Dare Questions (50 each)
+        // ============================================================
+
+        const { useState, useEffect, useRef, useMemo, useCallback, createContext, useContext } = React;
+
+        const confetti = window.confetti || (() => {});
+
+        const ThemeContext = createContext({ theme: 'light', toggleTheme: () => {} });
+        const useTheme = () => useContext(ThemeContext);
+
+        // ---- Truth Questions (combined from all categories) ----
+        const truthQuestions = [
+            // ❤️ Romantic
+            "When did you first realize you liked me?",
+            "What was your first impression of me?",
+            "What's your favorite memory of us?",
+            "What's one thing I do that always makes you smile?",
+            "What's your favorite feature about me?",
+            "What's something you've never told me?",
+            "If we could travel anywhere, where would you take me?",
+            "What's one habit of mine that you secretly find adorable?",
+            "When do you feel closest to me?",
+            "What's one thing you hope we do together in the future?",
+            // ❤️ Deep
+            "What's your biggest fear in a relationship?",
+            "What makes you feel truly loved?",
+            "What's something you're still healing from?",
+            "What's one dream you haven't shared with many people?",
+            "What's something you wish people understood about you?",
+            "What's your biggest insecurity?",
+            "What lesson has love taught you?",
+            "What do you value more than money?",
+            "What scares you about the future?",
+            "What's one thing you never want to lose?",
+            // 😂 Funny
+            "What's the weirdest thing you've Googled?",
+            "What's your most embarrassing moment?",
+            "Have you ever walked into the wrong room by accident?",
+            "What's the funniest lie you've told?",
+            "What's the strangest food you've ever eaten?",
+            "What's your most useless talent?",
+            "Have you ever laughed at the wrong time?",
+            "What's the weirdest dream you've had?",
+            "If animals could talk, which would be the rudest?",
+            "What's the funniest nickname you've ever had?",
+            // 🤭 Couple Truths
+            "Who apologizes first after an argument?",
+            "Who spends longer getting ready?",
+            "Who is more stubborn?",
+            "Who says 'I'm fine' when they're clearly not?",
+            "Who steals the blanket?",
+            "Who is more dramatic?",
+            "Who is more likely to cry during a movie?",
+            "Who starts random conversations at bedtime?",
+            "Who forgets where they put their phone more often?",
+            "Who is most likely to laugh first during a serious moment?",
+            // 🌙 Thought-Provoking
+            "What would your perfect life look like in 10 years?",
+            "If today were your last day, what would you regret not doing?",
+            "What makes you happiest?",
+            "What motivates you every morning?",
+            "Who has influenced your life the most?",
+            "What's one mistake that changed you?",
+            "What's something you've forgiven yourself for?",
+            "What's your biggest goal?",
+            "What does 'home' mean to you?",
+            "If you could relive one day, which would it be?",
+        ];
+
+        // ---- Dare Questions (combined from all categories) ----
+        const dareQuestions = [
+            // ❤️ Romantic
+            "Hug your partner for 30 seconds.",
+            "Hold hands for the next five minutes.",
+            "Give your partner three genuine compliments.",
+            "Look into your partner's eyes for 20 seconds without laughing.",
+            "Recreate your first selfie together.",
+            "Kiss your partner's forehead.",
+            "Tell your partner why you appreciate them.",
+            "Dance together for one minute without music.",
+            "Say 'I love you' in three different languages.",
+            "Pretend you're on your first date again.",
+            // 😂 Funny
+            "Talk like a robot for one minute.",
+            "Act like a cat until your next turn.",
+            "Pretend to be a news reporter describing the room.",
+            "Try to make your partner laugh without touching them.",
+            "Walk backwards for the next minute.",
+            "Tell a joke using only hand gestures.",
+            "Do your best celebrity impression.",
+            "Speak in rhymes for two minutes.",
+            "Balance a spoon on your nose for 20 seconds.",
+            "Make your funniest face and hold it for 15 seconds.",
+            // 🤣 Silly
+            "Dance like nobody's watching.",
+            "Pretend you're a movie villain.",
+            "Make five different animal sounds.",
+            "Sing the chorus of your favorite song dramatically.",
+            "Tell a story using only emojis.",
+            "Wear a blanket like a superhero cape.",
+            "Invent a handshake with your partner.",
+            "Talk in slow motion for one minute.",
+            "Pretend the floor is lava for 30 seconds.",
+            "Make up a commercial for your favorite snack.",
+            // 💌 Cute
+            "Send your partner a sweet message (if you're apart).",
+            "Share your favorite memory together.",
+            "Give your partner a high five and a hug.",
+            "Write a short love note.",
+            "Say five things you admire about your partner.",
+            "Plan your next date in under one minute.",
+            "Tell your partner what made you smile today.",
+            "Take a funny selfie together.",
+            "Draw a heart with your finger in the air.",
+            "Finish this sentence: 'I'm happiest when we...'",
+            // 🌟 Creative
+            "Describe your partner as if they were a superhero.",
+            "Create a silly nickname for your partner.",
+            "Act out your dream vacation.",
+            "Invent a new holiday for couples.",
+            "Give your partner an award and explain why they won.",
+            "Tell a bedtime story using random words.",
+            "Pretend you're both contestants on a game show.",
+            "Build the tallest tower you can using nearby objects.",
+            "Describe your partner using only three emojis.",
+            "Make up a secret team motto together.",
+        ];
+
+        // ============================================================
+        //  COMPONENT: Floating Hearts
+        // ============================================================
+        const FloatingHearts = ({ count = 18 }) => {
+            const emojis = ['❤️', '💕', '💖', '💗', '💝', '♥️', '💞', '💓'];
+            const hearts = useMemo(() => {
+                return Array.from({ length: count }, (_, i) => ({
+                    id: i,
+                    emoji: emojis[i % emojis.length],
+                    left: 5 + Math.random() * 90,
+                    delay: Math.random() * 12,
+                    duration: 10 + Math.random() * 18,
+                    size: 1.2 + Math.random() * 2.0,
+                    opacity: 0.06 + Math.random() * 0.18,
+                }));
+            }, [count]);
+            return (
+                <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', zIndex: 0 }}>
+                    {hearts.map((h) => (
+                        <div
+                            key={h.id}
+                            className="floating-heart"
+                            style={{
+                                left: h.left + '%',
+                                top: Math.random() * 100 + '%',
+                                fontSize: h.size + 'rem',
+                                opacity: h.opacity,
+                                animationDuration: h.duration + 's',
+                                animationDelay: h.delay + 's',
+                            }}
+                        >
+                            {h.emoji}
+                        </div>
+                    ))}
+                </div>
+            );
+        };
+
+        // ============================================================
+        //  COMPONENT: Navbar
+        // ============================================================
+        const Navbar = ({ onToggleTheme }) => {
+            const { theme } = useTheme();
+            const isDark = theme === 'dark';
+            return (
+                <nav className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-3 glass border-b border-white/20 dark:border-white/5">
+                    <div className="container-custom flex items-center justify-between">
+                        <div className="flex items-center gap-2.5 text-xl font-heading font-bold tracking-tight" style={{ color: '#FF5C8A' }}>
+                            <span className="text-2xl animate-heart-beat">💕</span>
+                            <span>Love Chaos</span>
+                        </div>
+                        <button
+                            onClick={onToggleTheme}
+                            className="p-2.5 rounded-full bg-white/40 dark:bg-darkCard/40 backdrop-blur-sm border border-white/20 dark:border-white/5 transition-all hover:scale-105"
+                            aria-label="Toggle theme"
+                        >
+                            {isDark ? <span className="text-xl">☀️</span> : <span className="text-xl">🌙</span>}
+                        </button>
+                    </div>
+                </nav>
+            );
+        };
+
+        // ============================================================
+        //  COMPONENT: Truth or Dare Game (with updated questions)
+        // ============================================================
+        const TruthOrDareGame = () => {
+            const { theme } = useTheme();
+            const isDark = theme === 'dark';
+
+            const [isSpinning, setIsSpinning] = useState(false);
+            const [rotation, setRotation] = useState(0);
+            const [result, setResult] = useState(null);
+            const [showResult, setShowResult] = useState(false);
+            const [history, setHistory] = useState([]);
+            const [gameModalOpen, setGameModalOpen] = useState(false);
+            const [currentQuestion, setCurrentQuestion] = useState('');
+            const [currentType, setCurrentType] = useState('');
+
+            // Wheel segments: alternating Truth/Dare
+            const wheelSegments = [
+                { label: '❤️ Truth', type: 'truth', color: '#FF5C8A' },
+                { label: '💪 Dare', type: 'dare', color: '#C7A4FF' },
+                { label: '❤️ Truth', type: 'truth', color: '#FF8FAB' },
+                { label: '💪 Dare', type: 'dare', color: '#D4B8FF' },
+                { label: '❤️ Truth', type: 'truth', color: '#FF5C8A' },
+                { label: '💪 Dare', type: 'dare', color: '#C7A4FF' },
+                { label: '❤️ Truth', type: 'truth', color: '#FF8FAB' },
+                { label: '💪 Dare', type: 'dare', color: '#D4B8FF' },
+            ];
+
+            // Use the global arrays defined above
+            const getQuestions = (type) => type === 'truth' ? truthQuestions : dareQuestions;
+
+            const spinWheel = () => {
+                if (isSpinning) return;
+                setIsSpinning(true);
+                setResult(null);
+                setShowResult(false);
+
+                const spins = 5 + Math.random() * 3;
+                const extra = Math.floor(Math.random() * wheelSegments.length);
+                const totalRotation = spins * 360 + (extra * (360 / wheelSegments.length));
+                const newRotation = rotation + totalRotation;
+                setRotation(newRotation);
+
+                setTimeout(() => {
+                    const normalized = (totalRotation % 360 + 360) % 360;
+                    const sectorAngle = 360 / wheelSegments.length;
+                    const idx = Math.floor(normalized / sectorAngle) % wheelSegments.length;
+                    const segment = wheelSegments[idx];
+                    const questions = getQuestions(segment.type);
+                    const question = questions[Math.floor(Math.random() * questions.length)];
+
+                    setResult({ type: segment.type, label: segment.label, question, idx });
+                    setCurrentType(segment.type);
+                    setCurrentQuestion(question);
+                    setShowResult(true);
+                    setIsSpinning(false);
+
+                    try {
+                        confetti({
+                            particleCount: segment.type === 'truth' ? 40 : 60,
+                            spread: segment.type === 'truth' ? 60 : 80,
+                            origin: { y: 0.6 },
+                            colors: segment.type === 'truth' ? ['#FF5C8A', '#FF8FAB', '#FFB3C6'] : ['#C7A4FF', '#D4B8FF', '#E8D9FF']
+                        });
+                    } catch (e) {}
+
+                    setHistory(prev => [...prev, { type: segment.type, label: segment.label, question, timestamp: Date.now() }]);
+
+                    setTimeout(() => {
+                        setGameModalOpen(true);
+                    }, 600);
+
+                }, 5000);
+            };
+
+            const closeModal = () => {
+                setGameModalOpen(false);
+                setShowResult(false);
+            };
+
+            const getNewQuestion = () => {
+                const questions = getQuestions(currentType);
+                const q = questions[Math.floor(Math.random() * questions.length)];
+                setCurrentQuestion(q);
+                setHistory(prev => [...prev, { type: currentType, label: currentType === 'truth' ? '❤️ Truth' : '💪 Dare', question: q, timestamp: Date.now() }]);
+                try {
+                    confetti({
+                        particleCount: 20,
+                        spread: 40,
+                        origin: { y: 0.5 },
+                        colors: currentType === 'truth' ? ['#FF5C8A', '#FF8FAB'] : ['#C7A4FF', '#D4B8FF']
+                    });
+                } catch (e) {}
+            };
+
+            const getEmoji = (type) => type === 'truth' ? '❤️' : '💪';
+            const truthCount = history.filter(h => h.type === 'truth').length;
+            const dareCount = history.filter(h => h.type === 'dare').length;
+
+            return (
+                <div className="py-8">
+                    <div className="relative">
+                        <div className="wheel-pointer">▼</div>
+                        <div className="wheel-container">
+                            <div
+                                className="wheel"
+                                style={{
+                                    transform: `rotate(${rotation}deg)`,
+                                    transition: isSpinning ? 'transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99)' : 'none',
+                                }}
+                            >
+                                {wheelSegments.map((seg, idx) => {
+                                    const angle = (idx / wheelSegments.length) * 360;
+                                    return (
+                                        <div
+                                            key={idx}
+                                            className="wheel-segment"
+                                            style={{
+                                                transform: `rotate(${angle}deg)`,
+                                                background: seg.color,
+                                                clipPath: 'polygon(0% 0%, 100% 0%, 50% 100%)',
+                                                color: '#fff',
+                                                textShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                                            }}
+                                        >
+                                            <span>{seg.label}</span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                            <div className="wheel-center">
+                                <span className="text-sm font-bold">Spin</span>
+                            </div>
+                        </div>
+
+                        <div className="mt-8 text-center">
+                            <button
+                                onClick={spinWheel}
+                                disabled={isSpinning}
+                                className={`btn-primary text-lg px-10 py-4 ${isSpinning ? 'opacity-60 cursor-not-allowed' : ''}`}
+                            >
+                                {isSpinning ? (
+                                    <>
+                                        <span className="animate-spin inline-block">⏳</span> Spinning...
+                                    </>
+                                ) : (
+                                    <>
+                                        <span>🎡</span> Spin the Wheel!
+                                    </>
+                                )}
+                            </button>
+                        </div>
+
+                        {showResult && !gameModalOpen && (
+                            <div className="mt-6 text-center animate-fade-in">
+                                <div className="glass-card p-6 inline-block mx-auto">
+                                    <div className="text-4xl mb-2">{getEmoji(currentType)}</div>
+                                    <div className="text-xl font-heading font-bold" style={{ color: currentType === 'truth' ? '#FF5C8A' : '#C7A4FF' }}>
+                                        {currentType === 'truth' ? 'Truth' : 'Dare'}!
+                                    </div>
+                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-2">Opening question...</div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="mt-10 grid grid-cols-2 gap-4 max-w-sm mx-auto">
+                        <div className="glass-card p-4 text-center">
+                            <div className="text-2xl">❤️</div>
+                            <div className="stat-number text-2xl">{truthCount}</div>
+                            <div className="text-xs text-gray-400 dark:text-gray-500">Truths</div>
+                        </div>
+                        <div className="glass-card p-4 text-center">
+                            <div className="text-2xl">💪</div>
+                            <div className="stat-number text-2xl">{dareCount}</div>
+                            <div className="text-xs text-gray-400 dark:text-gray-500">Dares</div>
+                        </div>
+                    </div>
+
+                    {history.length > 0 && (
+                        <div className="mt-8 max-w-md mx-auto">
+                            <h4 className="text-sm font-medium text-gray-400 dark:text-gray-500 mb-3 text-center">Recent</h4>
+                            <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
+                                {history.slice(-5).reverse().map((item, i) => (
+                                    <div key={i} className="glass-card p-3 text-sm flex items-center gap-3">
+                                        <span className="text-xl">{getEmoji(item.type)}</span>
+                                        <span className="flex-1 truncate text-gray-600 dark:text-gray-300">{item.question}</span>
+                                        <span className="text-xs text-gray-400 dark:text-gray-500 px-2 py-0.5 rounded-full bg-white/30 dark:bg-white/5">
+                                            {item.type}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {gameModalOpen && (
+                        <div className="modal-overlay" onClick={closeModal}>
+                            <div className="modal-content text-center" onClick={(e) => e.stopPropagation()}>
+                                <button
+                                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl"
+                                    onClick={closeModal}
+                                >
+                                    ✖️
+                                </button>
+                                <div className="text-6xl mb-4 animate-heart-beat">
+                                    {currentType === 'truth' ? '❤️' : '💪'}
+                                </div>
+                                <div className={`inline-block px-6 py-2 rounded-full text-sm font-bold mb-4 ${currentType === 'truth' ? 'bg-pink/20 text-pink' : 'bg-lavender/20 text-lavender'
+                                    }`}>
+                                    {currentType === 'truth' ? 'TRUTH' : 'DARE'}
+                                </div>
+                                <h3 className="font-heading text-2xl font-bold mb-4 leading-snug">
+                                    {currentQuestion}
+                                </h3>
+                                <div className="game-result-card mb-6 text-sm text-gray-500 dark:text-gray-400">
+                                    <p className="font-medium">📱 The phone holder reads this to their partner</p>
+                                </div>
+                                <div className="flex flex-wrap gap-3 justify-center">
+                                    <button onClick={getNewQuestion} className="btn-secondary text-sm">
+                                        <span>🔄</span> New {currentType === 'truth' ? 'Truth' : 'Dare'}
+                                    </button>
+                                    <button onClick={closeModal} className="btn-primary text-sm">
+                                        <span>✨</span> Done
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // ============================================================
+        //  PAGE: Landing (unchanged, but uses new question arrays)
+        // ============================================================
+        const LandingPage = () => {
+            const { theme } = useTheme();
+            const isDark = theme === 'dark';
+
+            const [showSurprise, setShowSurprise] = useState(false);
+            useEffect(() => {
+                const timer = setTimeout(() => setShowSurprise(true), 15000);
+                const interval = setInterval(() => {
+                    setShowSurprise(true);
+                    setTimeout(() => setShowSurprise(false), 8000);
+                }, 30000);
+                return () => { clearTimeout(timer);
+                    clearInterval(interval); };
+            }, []);
+
+            // Extra modal state
+            const [extraModal, setExtraModal] = useState({ open: false, icon: '', title: '', message: '' });
+
+            const openExtraModal = (icon, title, messages) => {
+                const msg = messages[Math.floor(Math.random() * messages.length)];
+                setExtraModal({ open: true, icon, title, message: msg });
+                try {
+                    confetti({
+                        particleCount: 20,
+                        spread: 40,
+                        origin: { y: 0.5 },
+                        colors: ['#FF5C8A', '#C7A4FF', '#FFD93D']
+                    });
+                } catch (e) {}
+            };
+
+            const closeExtraModal = () => setExtraModal({ open: false, icon: '', title: '', message: '' });
+
+            // Data for extras (unchanged)
+            const fortunes = [
+                "✨ Today your partner secretly wants a hug.",
+                "❤️ Expect extra cuddles tonight.",
+                "🌹 Someone is about to receive a compliment.",
+                "💌 You owe your partner one sweet message.",
+                "🥰 Your next selfie together will be adorable.",
+                "💕 A spontaneous kiss is in your near future.",
+                "🌟 You'll make your partner laugh today.",
+                "🍕 Pizza will be involved in your evening plans.",
+                "🎵 A song will remind you of your first date.",
+                "🌙 Tonight's conversation will be extra meaningful.",
+            ];
+
+            const roasts = [
+                "One of you definitely says 'I'm fine' when you're not.",
+                "You've spent more time choosing food than actually eating.",
+                "You both know exactly who steals the blanket.",
+                "The remote control is the real third partner.",
+                "Your love language is sharing snacks.",
+                "You've had the same argument about dishes three times this week.",
+                "One of you is definitely the 'funny one' and the other is the 'one who laughs at everything'.",
+                "You've been together long enough to finish each other's... sentences? Or snacks?",
+            ];
+
+            const challenges = [
+                "Hold hands for one minute.",
+                "Dance together for 30 seconds.",
+                "Compliment each other five times.",
+                "Take a silly selfie together.",
+                "Say three things you appreciate about each other.",
+                "Winner gets extra snacks (play rock paper scissors).",
+                "Give each other a back rub for 2 minutes.",
+                "Cook a meal together without arguing.",
+                "Share your favorite memory of each other.",
+            ];
+
+            const payingOutcomes = [
+                "🤣 Your Partner Pays!",
+                "😂 Sorry... It's Your Turn!",
+                "💸 Split the bill 50/50!",
+                "🍕 Whoever suggested the meal pays!",
+            ];
+
+            const loveMessages = [
+                "You're the cutest human today. ❤️",
+                "Kiss attack initiated! 😘",
+                "Buy your partner dessert tonight. 🍰",
+                "Hug for 20 seconds right now! 🤗",
+                "Send 'I miss you' to your partner. 💌",
+                "You're their favorite person. 🌟",
+                "Give them a spontaneous compliment. ✨",
+                "Tell them one thing you love about them. 💕",
+                "Plan a surprise date night. 🎉",
+                "Write a love note and hide it. 📝",
+            ];
+
+            const quotes = [
+                "Love grows through laughter.",
+                "Small moments become lifelong memories.",
+                "The best relationships are filled with jokes.",
+                "A couple that laughs together, stays together.",
+                "Love is not about how many days you've been together, but how much you love each other every single day.",
+                "The greatest happiness is to share your life with someone who makes you smile.",
+            ];
+
+            const featureCards = [
+                { id: 'fortune', icon: '🔮', title: 'Love Fortune', messages: fortunes },
+                { id: 'roast', icon: '😂', title: 'Roast Us', messages: roasts },
+                { id: 'challenge', icon: '🎲', title: 'Mini Challenge', messages: challenges },
+                { id: 'paying', icon: '🍕', title: 'Who\'s Paying?', messages: payingOutcomes },
+                { id: 'lovebtn', icon: '🎁', title: 'Love Button', messages: loveMessages },
+                { id: 'quote', icon: '💬', title: 'Love Quotes', messages: quotes },
+            ];
+
+            const stats = [
+                { label: 'Couples Playing', value: '12.4K', icon: '👫' },
+                { label: 'Truths Asked', value: '8,432', icon: '❤️' },
+                { label: 'Dares Completed', value: '6,127', icon: '💪' },
+                { label: 'Laughs Shared', value: '∞', icon: '😂' },
+            ];
+
+            const [dailyQuote, setDailyQuote] = useState("Love grows through laughter.");
+
+            return (
+                <div className="pt-20 min-h-screen relative">
+                    {/* ===== HERO ===== */}
+                    <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+                        <div className="hero-bg">
+                            <div className="blob" />
+                            <div className="blob" />
+                            <div className="blob" />
+                            <FloatingHearts count={22} />
+                        </div>
+
+                        <div className="container-custom relative z-10 py-8">
+                            <div className="max-w-3xl animate-slide-up">
+                                <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass text-sm font-medium text-pink dark:text-pink/90 mb-6">
+                                    <span className="animate-heart-beat">💕</span>
+                                    The ultimate couple's game
+                                </div>
+
+                                <h1 className="font-heading font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[1.08] tracking-tight mb-6">
+                                    Spin, <br />
+                                    <span className="gradient-text">Truth or Dare</span> <br />
+                                    & Fall Deeper 💕
+                                </h1>
+
+                                <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-xl mb-10 leading-relaxed">
+                                    One person holds the phone, spins the wheel, and asks their partner
+                                    the question. Get ready for laughter, surprises, and unforgettable moments.
+                                </p>
+
+                                <div className="flex flex-wrap gap-4">
+                                    <a href="#game" className="btn-primary">
+                                        <span>🎡</span> Play Now
+                                    </a>
+                                    <a href="#features" className="btn-secondary">
+                                        <span>✨</span> Explore More
+                                    </a>
+                                </div>
+
+                                <div className="scroll-indicator mt-14 flex flex-col items-center text-gray-400 dark:text-gray-500 text-sm gap-2">
+                                    <span>Scroll to spin</span>
+                                    <span className="text-2xl">▼</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* ===== GAME SECTION ===== */}
+                    <section id="game" className="py-16 relative">
+                        <div className="container-custom">
+                            <div className="text-center max-w-2xl mx-auto mb-8">
+                                <span className="inline-block px-5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-pink/10 text-pink dark:bg-pink/15 mb-4">
+                                    Main Game
+                                </span>
+                                <h2 className="font-heading text-3xl sm:text-4xl font-bold mb-3">
+                                    <span className="gradient-text">Truth or Dare</span> Wheel
+                                </h2>
+                                <p className="text-gray-500 dark:text-gray-400">
+                                    Spin the wheel — the phone holder asks the question to their partner.
+                                    No backing out! 😉
+                                </p>
+                            </div>
+
+                            <div className="glass-card p-6 sm:p-10 max-w-3xl mx-auto">
+                                <TruthOrDareGame />
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* ===== FEATURES ===== */}
+                    <section id="features" className="py-16 relative">
+                        <div className="container-custom">
+                            <div className="text-center max-w-2xl mx-auto mb-12">
+                                <span className="inline-block px-5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-lavender/10 text-lavender dark:bg-lavender/15 mb-4">
+                                    Extras
+                                </span>
+                                <h2 className="font-heading text-3xl sm:text-4xl font-bold mb-3">
+                                    More <span className="gradient-text">Love & Laughter</span>
+                                </h2>
+                                <p className="text-gray-500 dark:text-gray-400">
+                                    Tap any card to reveal a playful surprise with a beautiful animation.
+                                </p>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                                {featureCards.map((card) => (
+                                    <div
+                                        key={card.id}
+                                        className="glass-card p-6 cursor-pointer transition-all hover:scale-[1.02] hover:shadow-xl"
+                                        onClick={() => openExtraModal(card.icon, card.title, card.messages)}
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <div className="text-4xl">{card.icon}</div>
+                                            <div>
+                                                <h3 className="font-heading font-semibold text-lg">{card.title}</h3>
+                                                <p className="text-xs text-gray-400 dark:text-gray-500">Tap for a surprise</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* ===== STATS ===== */}
+                    <section className="py-12">
+                        <div className="container-custom">
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 max-w-3xl mx-auto">
+                                {stats.map((stat, i) => (
+                                    <div key={i} className="glass-card p-5 text-center">
+                                        <div className="text-3xl mb-2">{stat.icon}</div>
+                                        <div className="stat-number text-2xl">{stat.value}</div>
+                                        <div className="text-xs text-gray-400 dark:text-gray-500">{stat.label}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* ===== FOOTER ===== */}
+                    <footer className="py-10 text-center text-sm text-gray-400 dark:text-gray-500 border-t border-gray-200/30 dark:border-white/5 mt-8">
+                        <div className="container-custom">
+                            <p className="flex items-center justify-center gap-2">
+                                <span>💕</span> Made with love, laughter, and a little bit of chaos. <span>💕</span>
+                            </p>
+                            <p className="mt-2 text-xs opacity-60">
+                                The phone holder asks — the partner answers. No exceptions! 😉
+                            </p>
+                        </div>
+                    </footer>
+
+                    {/* Surprise Popup */}
+                    {showSurprise && (
+                        <div className="surprise-popup glass-card p-4 shadow-xl border border-pink/20">
+                            <div className="flex items-start gap-3">
+                                <span className="text-2xl animate-heart-beat">❤️</span>
+                                <div>
+                                    <p className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                                        Pause for a moment. Smile at your partner. 😊
+                                    </p>
+                                    <button className="text-xs text-pink mt-1" onClick={() => setShowSurprise(false)}>Dismiss</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* ===== EXTRA MODAL ===== */}
+                    {extraModal.open && (
+                        <div className="modal-overlay" onClick={closeExtraModal}>
+                            <div className="modal-content text-center" onClick={(e) => e.stopPropagation()}>
+                                <button
+                                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl"
+                                    onClick={closeExtraModal}
+                                >
+                                    ✖️
+                                </button>
+                                <div className="text-7xl mb-4 animate-float">{extraModal.icon}</div>
+                                <h3 className="font-heading text-2xl font-bold mb-3">{extraModal.title}</h3>
+                                <div className="game-result-card mb-6">
+                                    <p className="text-lg font-medium text-gray-700 dark:text-gray-200 leading-relaxed">
+                                        {extraModal.message}
+                                    </p>
+                                </div>
+                                <button onClick={closeExtraModal} className="btn-primary text-sm">
+                                    <span>💕</span> Lovely!
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // ============================================================
+        //  APP
+        // ============================================================
+        const App = () => {
+            const [theme, setTheme] = useState(() => {
+                const saved = localStorage.getItem('lc-theme');
+                return saved || 'light';
+            });
+
+            useEffect(() => {
+                document.documentElement.classList.toggle('dark', theme === 'dark');
+                localStorage.setItem('lc-theme', theme);
+            }, [theme]);
+
+            const toggleTheme = () => setTheme(t => t === 'light' ? 'dark' : 'light');
+
+            return (
+                <ThemeContext.Provider value={{ theme, toggleTheme }}>
+                    <div className={`min-h-screen ${theme === 'dark' ? 'dark' : ''}`}>
+                        <Navbar onToggleTheme={toggleTheme} />
+                        <LandingPage />
+                    </div>
+                </ThemeContext.Provider>
+            );
+        };
+
+        // ============================================================
+        //  RENDER
+        // ============================================================
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+        console.log('💕 Love Chaos — 50 Truths & 50 Dares loaded!');
+    </script>
+
+</body>
+</html>
